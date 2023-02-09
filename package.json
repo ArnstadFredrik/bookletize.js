@@ -1,6 +1,6 @@
 {
-  "name": "bookletize.js",
-  "description": "bookletize.js as npm module",
+  "name": "pdf-book",
+  "description": "npm module for creating pdf booklet",
   "version": "0.0.1",
   "scripts": {},
   "type":"module",
