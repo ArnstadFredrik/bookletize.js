@@ -1,8 +1,8 @@
-const { PDFDocument, StandardFonts, rgb } = PDFLib
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib'
 
-async function createPdf(existingPdfBytes, options) {
-  const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
-  const bookletDoc = await PDFLib.PDFDocument.create();
+const createBookPDF = async (existingPdfBytes, options) => {
+  const pdfDoc = await PDFDocument.load(existingPdfBytes);
+  const bookletDoc = await PDFDocument.create();
 
   options = options || {};
   const { width, height } = await pdfDoc.getPages()[0].getSize();
@@ -56,61 +56,20 @@ async function createPdf(existingPdfBytes, options) {
     console.log('added sheet', sheet);
   }
 
+
   console.log('completed assembling sheets');
-  $('.fa-spin').addClass('hidden');
+  //$('.fa-spin').addClass('hidden');
 //  const pdfDataUri = await bookletDoc.saveAsBase64({ dataUri: true });
 //  document.getElementById('pdf').src = pdfDataUri;
   const pdfBytes = await bookletDoc.save();
-  var blob = new Blob([pdfBytes], {type: "application/pdf"});
-  var link = window.URL.createObjectURL(blob);
+  const pdfObject = {booklet: bookletDoc, saved: pdfBytes}
+  //var blob = new Blob([pdfBytes], {type: "application/pdf"});
+  //var link = window.URL.createObjectURL(blob);
 
-  PDFObject.embed(link, "#pdf" );
-
-}
-
-function setup() {
-
-  var reader = new FileReader();
-
-  function handleFile(e) {
-
-    $('.fa-spin').removeClass('hidden');
-
-    e.preventDefault();
-    e.stopPropagation(); // stops the browser from redirecting.
-    console.log('filereader ', e, e.target.files);
-
-    if (e.target && e.target.files) var file = e.target.files[0];
-    else var file = e.dataTransfer.files[0];
-    if(!file) return;
-
-    var reader = new FileReader();
-
-    reader.onload = () => {
-      createPdf(reader.result);
-    };
-
-    reader.readAsArrayBuffer(file);
+  //PDFObject.embed(link, "#pdf" );
   
-  }
-
-  $('.dropzone')[0].addEventListener('drop', handleFile, false);
-  $('#fileInput').on('change drop', handleFile);
-
-
-  var dropzone = $('.dropzone');
-  dropzone.on('dragover', function onDragover(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
-  }, false);
-
-  dropzone.on('dragenter', function onDragEnter(e) {
-    dropzone.addClass('hover');
-  });
-
-  dropzone.on('dragleave', function onDragLeave(e) {
-    dropzone.removeClass('hover');
-  });
+  return pdfObject
 
 }
+
+export { createBookPDF }
