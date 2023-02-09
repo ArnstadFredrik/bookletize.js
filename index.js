@@ -1,5 +1,6 @@
 import { createBookPDF } from './util/createPDF.js'
 import { rotatePDF } from './util/rotatePDF.js'
-import fs from 'fs'
+import { shortEdge } from './util/shortEdge.js'
+import { longEdge } from './util/longEdge.js'
 
-export default { createPDF, rotatePDF }
+export default { createBookPDF, rotatePDF, shortEdge, longEdge }
